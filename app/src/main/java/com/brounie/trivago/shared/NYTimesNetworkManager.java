@@ -56,12 +56,11 @@ public class NYTimesNetworkManager {
     public void mostviewed(Object param1, final NYTimesCustomListener<String> listener)
     {
 
-        String url = prefixURL + "/mostpopular/v2/mostviewed/all-sections/1.json";
+        String url = prefixURL + "/mostpopular/v2/mostviewed/all-sections/1.json?api-key="+ NY_API_KEY;
 
         Map<String, Object> jsonParams = new HashMap<>();
-        jsonParams.put("api-key", NY_API_KEY);
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, new JSONObject(jsonParams),
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>()
                 {
                     @Override
