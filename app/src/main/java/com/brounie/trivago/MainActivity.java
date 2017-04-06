@@ -8,24 +8,23 @@ import com.brounie.trivago.shared.NYTimesCustomListener;
 
 public class MainActivity extends AppCompatActivity {
 
+    private int page = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         NYTimesNetworkManager.getInstance(this);
-        /*NYTimesNetworkManager.getInstance().mostviewed("all-sections","1", new NYTimesCustomListener<String>()
-        {
-            @Override
-            public void getResult(String result)
-            {
-                if (!result.isEmpty())
-                {
-                    System.out.println(result);
-                }
-            }
-        });*/
 
-        NYTimesNetworkManager.getInstance().articlesearch("siria",0, new NYTimesCustomListener<String>()
+
+
+
+
+
+    }
+
+    public void get_viewed(){
+        NYTimesNetworkManager.getInstance().mostviewed("all-sections","1", new NYTimesCustomListener<String>()
         {
             @Override
             public void getResult(String result)
@@ -36,7 +35,19 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
 
-
+    public void get_article(String q, int page ){
+        NYTimesNetworkManager.getInstance().articlesearch(q,page, new NYTimesCustomListener<String>()
+        {
+            @Override
+            public void getResult(String result)
+            {
+                if (!result.isEmpty())
+                {
+                    System.out.println(result);
+                }
+            }
+        });
     }
 }

@@ -57,7 +57,7 @@ public class NYTimesNetworkManager {
     public void articlesearch(String q,int page, final NYTimesCustomListener<String> listener)
     {
 
-        String url = prefixURL + "/search/v2/articlesearch.json?q=" + Uri.encode(q) + "&page=" + page;
+        String url = prefixURL + "/search/v2/articlesearch.json?q=" + Uri.encode(q) + "&page=" + page + "&api-key="+ NY_API_KEY;
 
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
