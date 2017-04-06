@@ -1,6 +1,7 @@
 package com.brounie.trivago.shared;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -53,10 +54,43 @@ public class NYTimesNetworkManager {
         return instance;
     }
 
-    public void mostviewed(Object param1, final NYTimesCustomListener<String> listener)
+    public void articlesearch(String q,int page, final NYTimesCustomListener<String> listener)
     {
 
-        String url = prefixURL + "/mostpopular/v2/mostviewed/all-sections/1.json?api-key="+ NY_API_KEY;
+        String url = prefixURL + "/search/v2/articlesearch.json?q=" + Uri.encode(q) + "&page=" + page;
+
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response)
+                    {
+                        Log.d(TAG + ": ", "somePostRequest Response : " + response.toString());
+                        if(null != response.toString())
+                            listener.getResult(response.toString());
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+                        if (null != error.networkResponse)
+                        {
+                            Log.d(TAG + ": ", "Error Response code: " + error.networkResponse.statusCode);
+                            listener.getResult("Error");
+                        }
+                    }
+                });
+
+        requestQueue.add(request);
+    }
+
+    public void mostviewed(String section,String date, final NYTimesCustomListener<String> listener)
+    {
+
+        String url = prefixURL + "/mostpopular/v2/mostviewed/" + section + "/" + date + ".json?api-key="+ NY_API_KEY;
 
         Map<String, Object> jsonParams = new HashMap<>();
 

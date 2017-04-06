@@ -13,7 +13,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         NYTimesNetworkManager.getInstance(this);
-        NYTimesNetworkManager.getInstance().mostviewed("", new NYTimesCustomListener<String>()
+        /*NYTimesNetworkManager.getInstance().mostviewed("all-sections","1", new NYTimesCustomListener<String>()
+        {
+            @Override
+            public void getResult(String result)
+            {
+                if (!result.isEmpty())
+                {
+                    System.out.println(result);
+                }
+            }
+        });*/
+
+        NYTimesNetworkManager.getInstance().articlesearch("siria",0, new NYTimesCustomListener<String>()
         {
             @Override
             public void getResult(String result)
@@ -24,5 +36,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+
     }
 }
