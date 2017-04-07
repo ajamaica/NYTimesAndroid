@@ -78,14 +78,14 @@ public class SearchLoadMoreAdapter extends InfiniteAdapter<RecyclerView.ViewHold
                 h.date.setText(object.optString("pub_date"));
             }
 
-            if ( !object.optString("lead_paragraph").isEmpty()){
+            if ( !object.optString("lead_paragraph").isEmpty() && !object.optString("lead_paragraph").equals("null")){
                 h.extrac.setText(object.optString("lead_paragraph"));
             }
 
             if ( object.optJSONArray("multimedia") != null && object.optJSONArray("multimedia").optJSONObject(0) != null ){
                 h.image.setVisibility(View.VISIBLE);
                 String url = "http://www.nytimes.com/" + object.optJSONArray("multimedia").optJSONObject(0).optString("url");
-                Picasso.with(mContext).load(url).into(h.image);
+                Picasso.with(mContext).load(url).resize(300, 300).into(h.image);
             }
 
 
