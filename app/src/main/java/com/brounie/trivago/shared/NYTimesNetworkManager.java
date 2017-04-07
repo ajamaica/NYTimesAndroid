@@ -22,6 +22,8 @@ import java.util.Map;
  */
 
 public class NYTimesNetworkManager {
+    public static final String TAG_ARTICLEQUERY = "ARTICLE";
+    public static final String TAG_DOCQUERY = "MOST";
     private static final String TAG = "NetworkManager";
     private static NYTimesNetworkManager instance = null;
 
@@ -34,7 +36,6 @@ public class NYTimesNetworkManager {
     private NYTimesNetworkManager(Context context)
     {
         requestQueue = Volley.newRequestQueue(context.getApplicationContext());
-        //other stuf if you need
     }
 
     public static synchronized NYTimesNetworkManager getInstance(Context context)
@@ -61,6 +62,7 @@ public class NYTimesNetworkManager {
         String url = prefixURL + "/search/v2/articlesearch.json?q=" + Uri.encode(q) + "&page=" + page + "&api-key="+ NY_API_KEY;
 
 
+
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>()
                 {
@@ -83,7 +85,8 @@ public class NYTimesNetworkManager {
                         }
                     }
                 });
-
+        requestQueue.cancelAll(TAG_ARTICLEQUERY);
+        request.setTag(TAG_ARTICLEQUERY);
         requestQueue.add(request);
     }
 
@@ -116,7 +119,7 @@ public class NYTimesNetworkManager {
                         }
                     }
                 });
-
+        request.setTag(TAG_DOCQUERY);
         requestQueue.add(request);
     }
 }
