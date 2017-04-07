@@ -11,6 +11,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -54,7 +55,7 @@ public class NYTimesNetworkManager {
         return instance;
     }
 
-    public void articlesearch(String q,int page, final NYTimesCustomListener<String> listener)
+    public void articlesearch(String q,int page, final NYTimesCustomListener<JSONArray> listener)
     {
 
         String url = prefixURL + "/search/v2/articlesearch.json?q=" + Uri.encode(q) + "&page=" + page + "&api-key="+ NY_API_KEY;
@@ -66,9 +67,8 @@ public class NYTimesNetworkManager {
                     @Override
                     public void onResponse(JSONObject response)
                     {
-                        Log.d(TAG + ": ", "somePostRequest Response : " + response.toString());
-                        if(null != response.toString())
-                            listener.getResult(response.toString());
+                        if(null != response)
+                            listener.getResult(response.optJSONObject("response").optJSONArray("docs"));
                     }
                 },
                 new Response.ErrorListener()
@@ -79,7 +79,7 @@ public class NYTimesNetworkManager {
                         if (null != error.networkResponse)
                         {
                             Log.d(TAG + ": ", "Error Response code: " + error.networkResponse.statusCode);
-                            listener.getResult("Error");
+                            listener.getResult(new JSONArray());
                         }
                     }
                 });
@@ -87,7 +87,7 @@ public class NYTimesNetworkManager {
         requestQueue.add(request);
     }
 
-    public void mostviewed(String section,String date, final NYTimesCustomListener<String> listener)
+    public void mostviewed(String section,String date, final NYTimesCustomListener<JSONArray> listener)
     {
 
         String url = prefixURL + "/mostpopular/v2/mostviewed/" + section + "/" + date + ".json?api-key="+ NY_API_KEY;
@@ -100,9 +100,8 @@ public class NYTimesNetworkManager {
                     @Override
                     public void onResponse(JSONObject response)
                     {
-                        Log.d(TAG + ": ", "somePostRequest Response : " + response.toString());
                         if(null != response.toString())
-                            listener.getResult(response.toString());
+                            listener.getResult(response.optJSONArray("results"));
                     }
                 },
                 new Response.ErrorListener()
@@ -113,7 +112,7 @@ public class NYTimesNetworkManager {
                         if (null != error.networkResponse)
                         {
                             Log.d(TAG + ": ", "Error Response code: " + error.networkResponse.statusCode);
-                            listener.getResult("Error");
+                            listener.getResult(new JSONArray());
                         }
                     }
                 });
