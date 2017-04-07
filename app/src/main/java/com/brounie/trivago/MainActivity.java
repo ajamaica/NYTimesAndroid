@@ -8,11 +8,11 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.brounie.trivago.Adapter.MoreViewedArticleAdapter;
 import com.brounie.trivago.Adapter.SearchLoadMoreAdapter;
 import com.brounie.trivago.Util.ArrayUtil;
 import com.brounie.trivago.shared.NYTimesNetworkManager;
@@ -23,7 +23,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
     private int page = 0;
     private String query = "";
-    private SearchLoadMoreAdapter adapter;
+    private SearchLoadMoreAdapter searchLoadMoreAdapter;
+    private MoreViewedArticleAdapter moreViewedArticleAdapter;
     private ArrayList<JSONObject> popular_articles = new ArrayList< JSONObject>();
     private ArrayList<JSONObject> search_articles = new ArrayList< JSONObject>();
 
@@ -65,18 +65,32 @@ public class MainActivity extends AppCompatActivity {
             {
                 if (result.length() >0)
                 {
-
-
                     popular_articles = ArrayUtil.convert(result);
 
+                    moreViewedArticleAdapter = new MoreViewedArticleAdapter(MainActivity.this, popular_articles);
+                    recycleView.setHasFixedSize(true);
+                    recycleView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                    moreViewedArticleAdapter.setShouldLoadMore(false);
+                    recycleView.setAdapter(moreViewedArticleAdapter);
 
                 }
             }
         });
     }
 
+    public void reset_recicleView(){
+        search_articles = new ArrayList< JSONObject>();
+        popular_articles = new ArrayList< JSONObject>();
+        searchLoadMoreAdapter = new SearchLoadMoreAdapter(MainActivity.this, search_articles);
+        recycleView.setHasFixedSize(true);
+        recycleView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        recycleView.setAdapter(searchLoadMoreAdapter);
+    }
+
     public void get_article(String q, final int page ){
+
         if(q.isEmpty()){
+            reset_recicleView();
             return;
         }
 
@@ -90,15 +104,15 @@ public class MainActivity extends AppCompatActivity {
                 {
                     if(page == 0){
                         search_articles = ArrayUtil.convert(result);
-                        adapter = new SearchLoadMoreAdapter(MainActivity.this, search_articles);
+                        searchLoadMoreAdapter = new SearchLoadMoreAdapter(MainActivity.this, search_articles);
 
                         recycleView.setHasFixedSize(true);
-                        recycleView.setAdapter(adapter);
+                        recycleView.setAdapter(searchLoadMoreAdapter);
                         recycleView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-                        adapter.setOnLoadMoreListener(mLoadMoreListener);
+                        searchLoadMoreAdapter.setOnLoadMoreListener(mLoadMoreListener);
                     }else{
                         ArrayList<JSONObject> retrived_articles = ArrayUtil.convert(result);
-                        adapter.moreDataLoaded(search_articles.size(), retrived_articles.size());
+                        searchLoadMoreAdapter.moreDataLoaded(search_articles.size(), retrived_articles.size());
                         search_articles.addAll(ArrayUtil.convert(result));
 
                     }
@@ -137,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 // Do something when collapsed
+                reset_recicleView();
                 get_viewed();
                 return true;  // Return true to collapse action view
             }
@@ -144,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 // Do something when expanded
+                reset_recicleView();
                 return true;  // Return true to expand action view
             }
         });
