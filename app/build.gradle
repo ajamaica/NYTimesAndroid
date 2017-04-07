@@ -30,4 +30,5 @@ dependencies {
     compile 'com.iamtheib.infiniterecyclerview:library:1.4'
     compile 'com.jakewharton:butterknife:8.5.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }

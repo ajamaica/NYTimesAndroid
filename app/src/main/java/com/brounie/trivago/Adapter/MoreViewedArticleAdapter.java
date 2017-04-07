@@ -13,6 +13,7 @@ import com.brounie.trivago.Adapter.ArticleHolder.ArticleHolder;
 import com.brounie.trivago.Adapter.ArticleHolder.LoadingViewHolder;
 import com.brounie.trivago.R;
 import com.iamtheib.infiniterecyclerview.InfiniteAdapter;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
@@ -61,8 +62,11 @@ public class MoreViewedArticleAdapter extends InfiniteAdapter<RecyclerView.ViewH
             return;
         }
         else {
+
             ArticleHolder h = (ArticleHolder) holder;
+            h.image.setVisibility(View.GONE);
             JSONObject object =  data.get(position);
+
             if ( !object.optString("title").isEmpty()){
                 h.title.setText(object.optString("title"));
             }
@@ -71,6 +75,14 @@ public class MoreViewedArticleAdapter extends InfiniteAdapter<RecyclerView.ViewH
             }
             if ( !object.optString("published").isEmpty()){
                 h.date.setText(object.optString("published"));
+            }
+
+            if ( object.optJSONArray("media") != null &&
+                    object.optJSONArray("media").optJSONObject(0).optJSONArray("media-metadata") != null &&
+                    object.optJSONArray("media").optJSONObject(0).optJSONArray("media-metadata").optJSONObject(0) != null){
+                String url = object.optJSONArray("media").optJSONObject(0).optJSONArray("media-metadata").optJSONObject(0).optString("url");
+                h.image.setVisibility(View.VISIBLE);
+                Picasso.with(mContext).load(url).into(h.image);
             }
 
         }

@@ -13,6 +13,7 @@ import com.brounie.trivago.Adapter.ArticleHolder.ArticleHolder;
 import com.brounie.trivago.Adapter.ArticleHolder.LoadingViewHolder;
 import com.brounie.trivago.R;
 import com.iamtheib.infiniterecyclerview.InfiniteAdapter;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
@@ -68,9 +69,25 @@ public class SearchLoadMoreAdapter extends InfiniteAdapter<RecyclerView.ViewHold
         else {
             ArticleHolder h = (ArticleHolder) holder;
             JSONObject object =  data.get(position);
+            h.image.setVisibility(View.GONE);
             if ( object.optJSONObject("headline") != null && !object.optJSONObject("headline").optString("main").isEmpty()){
                 h.title.setText(object.optJSONObject("headline").optString("main"));
             }
+
+            if ( !object.optString("pub_date").isEmpty()){
+                h.date.setText(object.optString("pub_date"));
+            }
+
+            if ( !object.optString("lead_paragraph").isEmpty()){
+                h.extrac.setText(object.optString("lead_paragraph"));
+            }
+
+            if ( object.optJSONArray("multimedia") != null && object.optJSONArray("multimedia").optJSONObject(0) != null ){
+                h.image.setVisibility(View.VISIBLE);
+                String url = "http://www.nytimes.com/" + object.optJSONArray("multimedia").optJSONObject(0).optString("url");
+                Picasso.with(mContext).load(url).into(h.image);
+            }
+
 
         }
 
