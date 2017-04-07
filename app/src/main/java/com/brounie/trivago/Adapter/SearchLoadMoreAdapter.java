@@ -50,8 +50,8 @@ public class SearchLoadMoreAdapter extends InfiniteAdapter<RecyclerView.ViewHold
 
     @Override
     public RecyclerView.ViewHolder onCreateView(ViewGroup parent, int viewType) {
-        View dummyView = LayoutInflater.from(mContext).inflate(R.layout.article_cell, parent, false);
-        return new ArticleHolder(dummyView);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.article_cell, parent, false);
+        return new ArticleHolder(view);
     }
 
     @Override
@@ -66,8 +66,12 @@ public class SearchLoadMoreAdapter extends InfiniteAdapter<RecyclerView.ViewHold
             return;
         }
         else {
-            // data.get(position)
-            ((ArticleHolder) holder).tv.setText("ewddew");
+            ArticleHolder h = (ArticleHolder) holder;
+            JSONObject object =  data.get(position);
+            if ( object.optJSONObject("headline") != null && !object.optJSONObject("headline").optString("main").isEmpty()){
+                h.title.setText(object.optJSONObject("headline").optString("main"));
+            }
+
         }
 
         super.onBindViewHolder(holder, position);

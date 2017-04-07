@@ -2,6 +2,7 @@ package com.brounie.trivago;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +11,7 @@ import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.brounie.trivago.Adapter.SearchLoadMoreAdapter;
 import com.brounie.trivago.Util.ArrayUtil;
@@ -130,7 +132,21 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+        MenuItem menuItem = menu.findItem(R.id.search);
+        MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                // Do something when collapsed
+                get_viewed();
+                return true;  // Return true to collapse action view
+            }
 
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                // Do something when expanded
+                return true;  // Return true to expand action view
+            }
+        });
 
         return true;
     }

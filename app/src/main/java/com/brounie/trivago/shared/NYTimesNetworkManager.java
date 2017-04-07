@@ -85,7 +85,7 @@ public class NYTimesNetworkManager {
                         }
                     }
                 });
-        requestQueue.cancelAll(TAG_ARTICLEQUERY);
+        //requestQueue.cancelAll(TAG_ARTICLEQUERY);
         request.setTag(TAG_ARTICLEQUERY);
         requestQueue.add(request);
     }
